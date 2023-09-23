@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/head :: head"></head>
+<script>
+    $(document).ready(function () {
+        if (localStorage.getItem("userId") === "" || localStorage.getItem("userId") === null
+            || localStorage.getItem("userId") === undefined) {
+            window.location.replace("/");
+        }
+    });
+</script>
+<body>
+<nav th:fragment="nav" id="navbar-home" class="navbar navbar-expand-sm mt-auto fixed-top"
+     style="color:gray !important;z-index: 9999;">
+    <a class="navbar-brand" th:href="@{/home}" style="color:gray !important" href="/books">Login App</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+            <div id="balance"></div>
+            <div class="userName" style="display:none">
+                <div class="d-flex flex-row">
+                    <li class="nav-item dropdown">
+                        <a style="color:gray !important" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                           href="#" role="button"><i class="fa fa-user-o fa-1x" aria-hidden="true"></i>
+                            <span
+                                    id="usernameValue">
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" onclick="logoutClick();" href="#"><i
+                                    class="fa fa-sign-out fa-fw"></i>Logout</a>
+                        </div>
+                    </li>
+                </div>
+            </div>
+
+            <div class="loginButton" style="display:none">
+                <div class="d-flex flex-row">
+                    <li class="nav-item d-flex flex-row">
+                        <i class="align-self-center fa fa-user-o " aria-hidden="true" style="color: grey;"></i>
+                        <a class="nav-link mr-3" style="color:gray !important" th:href="@{/login}" href="/login">
+                            Log In
+                        </a>
+                    </li>
+                </div>
+            </div>
+        </ul>
+        <!--==========================================================================================-->
+        <!--endregion-->
+    </div>
+</nav>
+
+<div th:replace="fragments/jsScripts :: scripts"></div>
+
+</body>
+</html>

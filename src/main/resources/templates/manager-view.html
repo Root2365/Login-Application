@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+</head>
+<script src="https://use.fontawesome.com/c0c323679c.js"></script>
+<script>
+    if (localStorage.getItem("userId") === "" || localStorage.getItem("userId") === null
+        || localStorage.getItem("userId") === undefined) {
+        window.location.replace("/home");
+    }
+    if (localStorage.getItem("role") !== "MANAGER") {
+        window.location.replace("/home");
+    }
+</script>
+<body>
+<!--Navbar-->
+<nav th:replace="fragments/header :: nav"></nav>
+
+<div class="container">
+    <div class="row" style="justify-content: center; margin-top: 300px">
+        <div>
+            <h3>Only manager can access this page</h3>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+<div th:replace="fragments/jsScripts :: scripts"></div>
+
+</body>
+</html>

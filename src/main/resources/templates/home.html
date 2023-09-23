@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+</head>
+<script src="https://use.fontawesome.com/c0c323679c.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/circliful/1.0.2/js/jquery.circliful.min.js"></script>
+<script>
+    $(document).ready(function () {
+        if (localStorage.getItem("userId") === "" || localStorage.getItem("userId") === null
+            || localStorage.getItem("userId") === undefined) {
+            window.location.replace("/");
+        } else {
+            $('#welcomeName').text("Welcome to Login App, " + localStorage.getItem("firstName") + " " + localStorage.getItem("lastName"));
+
+            const managerViewDiv = document.getElementById("managerView");
+
+            if (localStorage.getItem("role") === 'USER') {
+                managerViewDiv.style.display = "none";
+            }
+
+            const itemsToAdd =
+                ["First Name : " + localStorage.getItem("firstName"),
+                    "Last Name : " + localStorage.getItem("lastName"),
+                    "Email : " + localStorage.getItem("email"),
+                    "User Role : " + localStorage.getItem("role")
+                ];
+
+            const ulElement = document.getElementById("userInfo");
+
+            // Loop through the items and create <li> elements
+            for (const itemText of itemsToAdd) {
+                // Create a new <li> element
+                const liElement = document.createElement("li");
+
+                // Set the text content of the <li> element
+                liElement.textContent = itemText;
+
+                // Append the <li> element to the <ul> element
+                ulElement.appendChild(liElement);
+            }
+        }
+    });
+</script>
+<body>
+
+<!--Navbar-->
+<nav th:replace="fragments/header :: nav"></nav>
+
+<div>
+    <div class="row">
+        <div class="mx-auto" style="margin-top: 50px;padding:5px;">
+            <h3 id="welcomeName" style="font-family: 'Arial Hebrew';font-size: 40px;"></h3>
+
+            <ul id="userInfo">
+            </ul>
+
+            <div id="managerView">
+                <a th:href="@{/manager-view}">Go to Manager View</a>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+    <div th:replace="fragments/jsScripts :: scripts"></div>
+</div>
+</body>
+</html>

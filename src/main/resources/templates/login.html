@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+</head>
+<script src="https://use.fontawesome.com/c0c323679c.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+        if (localStorage.getItem("userId") !== "" && localStorage.getItem("userId") !== null
+            && localStorage.getItem("userId") !== undefined) {
+            window.location.replace("/");
+        }
+    });
+
+    function loginClick() {
+        var data = {}
+
+        data["username"] = $("#username").val();
+        data["password"] = $("#password").val();
+        if (data["username"] == null || data["username"] == undefined || data["username"] == "" || data["username"].trim() == "" ||
+            data["password"] == null || data["password"] == undefined || data["password"] == "" || data["password"].trim() == "") {
+            $("#errorAlert").children('.modal-dialog').children('.modal-content').children('span').html("<p style='font-size:20px;color:red'>Please fill valid user name and password</p>");
+            $("#errorAlert").modal("show");
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify(data),
+            url: "/api/login",
+            contentType: 'application/json',
+            success: function (result) {
+                if (result && result.status && result.status === 'SUCCESS') {
+                    localStorage.setItem("userId", result.result.userID);
+                    localStorage.setItem("firstName", result.result.firstName);
+                    localStorage.setItem("lastName", result.result.lastName);
+                    localStorage.setItem("role", result.result.role);
+                    localStorage.setItem("email", result.result.email);
+                    window.location.href = "/home";
+                } else {
+                    localStorage.setItem("userId", "");
+                    localStorage.setItem("firstName", "");
+                    localStorage.setItem("lastName", "");
+                    localStorage.setItem("role", "");
+
+                    $("#loginFailedMsg").children('.modal-dialog').children('.modal-content').children('span').html("<p style='font-size:20px;color:red'>Invalid credentials</p>");
+                    $("#loginFailedMsg").modal("show");
+                }
+            }, error: function (err) {
+                localStorage.setItem("userId", "");
+                localStorage.setItem("firstName", "");
+                localStorage.setItem("lastName", "");
+                localStorage.setItem("role", "");
+
+                $("#loginFailedMsg").children('.modal-dialog').children('.modal-content').children('span').html("<p style='font-size:20px;color:red'>Invalid credentials</p>");
+                $("#loginFailedMsg").modal("show");
+            }
+        });
+    }
+</script>
+
+<body>
+
+<!--Navbar-->
+<nav th:replace="fragments/header :: nav"></nav>
+
+<div class="container" style="padding-bottom:25px;">
+    <div class="row">
+        <div class="card col-6 mx-auto" style="width: 20rem; margin-top: 80px;">
+            <div class="error" style="display:none;">
+                <div class="alert alert-danger" style="margin-top: 8px;">
+                    Invalid credentials
+                </div>
+            </div>
+
+            <div th:if="${param.logout}">
+                <div class="alert alert-info"> You have been logged out</div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Login:</h4>
+                <div class="form-group">
+                    <label class="control-label" for="username">Email</label>
+                    <input id="username" type="email" class="form-control" required autofocus="autofocus"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="password">Password</label>
+                    <input id="password" type="password" class="form-control" required autofocus="autofocus"/>
+                </div>
+
+                <button type="submit" onclick="loginClick();" class="btn btn-primary">Login</button>
+
+                <p style="margin-top: 5px;">New user?<a href="/register"> Click here to register</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="errorAlert" role="dialog" aria-labelledby="successAlertLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="text-align: center;padding:50px">
+            <i class="fa fa-times-circle  fa-5x" aria-hidden="true" style="color: red;"></i><br>
+            <span id="errorMsg"></span><br>
+            <button type="button" class="btn btn-success" data-dismiss="modal">Okay</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="loginFailedMsg" role="dialog" aria-labelledby="successAlertLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="text-align: center;padding:50px">
+            <i class="fa fa-times-circle  fa-5x" aria-hidden="true" style="color: red;"></i><br>
+            <span id="loginFailErrorMsg"></span><br>
+            <button type="button" class="btn btn-success" data-dismiss="modal">Okay</button>
+        </div>
+    </div>
+</div>
+
+<span> '[[${#httpServletRequest.remoteUser}]]' </span>
+<footer th:replace="fragments/footer :: footer"></footer>
+<div th:replace="fragments/jsScripts :: scripts"></div>
+
+</body>
+</html>
